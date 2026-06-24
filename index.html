@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANGILA - Chăm sóc da từ thiên nhiên</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome cho Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #062615;      /* Màu xanh lục đậm chủ đạo */
+            --accent-color: #bc8a4c;       /* Màu vàng đất / hạt dẻ nhạt */
+            --text-dark: #222222;          /* Màu chữ tối */
+            --text-light: #ffffff;         /* Màu chữ sáng */
+            --bg-light: #f9f6f0;           /* Màu nền kem nhạt */
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --max-width: 1200px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text-dark);
+            background-color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main { flex-grow: 1; }
+
+        img { max-width: 20%; height: auto; display: block; }
+        a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
+        ul { list-style: none; }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Cơ chế Single Page Application (SPA) */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .page-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 28px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            border-radius: 4px;
+        }
+        .btn-filled { background-color: var(--accent-color); color: white; border: 1px solid var(--accent-color); }
+        .btn-filled:hover { background-color: #a47539; border-color: #a47539; transform: translateY(-2px); }
+        .btn-outline { background-color: transparent; color: white; border: 1px solid white; }
+        .btn-outline:hover { background-color: white; color: var(--primary-color); }
+        .btn-dark { background-color: var(--primary-color); color: white; border: 1px solid var(--primary-color); }
+        .btn-dark:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        /* Định dạng nội dung bài văn (Long text) */
+        .text-content {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .text-content h2 {
+            font-family: var(--font-serif);
+            color: var(--primary-color);
+            font-size: 28px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        .text-content h3 {
+            font-family: var(--font-serif);
+            color: var(--accent-color);
+            font-size: 22px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        .text-content h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        .text-content p {
+            margin-bottom: 16px;
+            text-align: justify;
+            color: #444;
+            line-height: 1.8;
+        }
+        .text-content ul, .text-content ol {
+            margin-bottom: 16px;
+            padding-left: 20px;
+            color: #444;
+            line-height: 1.8;
+        }
+        .text-content li { margin-bottom: 8px; }
+
+        .top-bar {
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .top-bar .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 5px; }
+
+        header {
+            background-color: var(--bg-light);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; position: relative; }
+        .logo { font-family: var(--font-serif); font-size: 28px; font-weight: 700; color: var(--primary-color); cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        
+        .nav-menu { display: flex; gap: 30px; }
+        .nav-menu a { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; }
+        .nav-menu a:hover, .nav-menu a.active { color: var(--accent-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 4px; }
+        .nav-icons { display: flex; gap: 20px; font-size: 18px; color: var(--primary-color); }
+        .menu-toggle { display: none; font-size: 24px; cursor: pointer; color: var(--primary-color); user-select: none; }
+
+        /* Header Hero Trang Chủ */
+        .hero {
+            background: linear-gradient(rgba(6, 38, 21, 0.85), rgba(6, 38, 21, 0.85));
+            color: white;
+            padding: 80px 0;
+            position: relative;
+        }
+        .hero-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; align-items: center; gap: 40px; }
+        .hero-content h1 { font-family: var(--font-serif); font-size: 56px; font-weight: 400; line-height: 1.1; margin-bottom: 15px; letter-spacing: 2px; }
+        .hero-content h1 span { font-style: italic; color: var(--accent-color); }
+        .hero-content .subtitle { font-size: 16px; max-width: 500px; margin-bottom: 30px; opacity: 0.9; }
+        .hero-buttons { display: flex; gap: 15px; }
+        .hero-image-wrapper { position: relative; display: flex; justify-content: center; }
+        .hero-product-img { max-height: 450px; max-width: 70%; object-fit: contain; border-radius: 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); filter: drop-shadow(0 15px 30px rgba(0,0,0,0.25)); cursor: pointer; transition: transform 0.3s ease; }
+        .hero-product-img:hover { transform: scale(1.05); }
+
+        /* Commitments */
+        .commitments { background-color: #ffffff; padding: 0 0 40px; }
+        .commitment-box {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 15px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-top: -60px;
+            position: relative;
+            z-index: 10;
+        }
+        .commit-item { text-align: center; padding: 0 10px; }
+        .commit-item:not(:last-child) { border-right: 1px dashed #e0e0e0; }
+        .commit-icon { width: 45px; margin: 0 auto 15px; font-size: 32px; color: var(--accent-color); }
+        .commit-item h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--primary-color); }
+        .commit-item p { font-size: 12px; color: #666; }
+
+        .section-header {
+            background-color: var(--bg-light);
+            padding: 60px 0;
+            text-align: center;
+            border-bottom: 1px solid #e8e2d5;
+        }
+        .section-header h1 {
+            font-family: var(--font-serif);
+            font-size: 42px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        .section-header p { color: #666; font-size: 16px; }
+
+        /* Sản Phẩm Section */
+        .product-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin: 60px 0;
+        }
+        .product-img-card {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .product-img-card:hover { transform: translateY(-5px); }
+        .product-img-card img { width: 100%; height: 400px; object-fit: cover; border-radius: 8px; max-width: none; }
+        
+        .product-details {
+            padding: 20px;
+        }
+        .product-details .price { font-size: 28px; font-weight: 700; color: var(--primary-color); margin: 15px 0; }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .gallery-img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            max-width: none;
+        }
+        .gallery-img.active { border-color: var(--accent-color); }
+
+        /* Liên Hệ Section */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 60px auto;
+            max-width: 900px;
+        }
+        .contact-card {
+            background: var(--bg-light);
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .contact-icon {
+            font-size: 40px;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--bg-light);
+            padding: 60px 0 20px;
+            font-size: 13px;
+            color: #444;
+            border-top: 1px solid #e8e2d5;
+            margin-top: auto;
+        }
+        .footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1.2fr; gap: 30px; margin-bottom: 40px; }
+        .footer-col h4 { font-size: 14px; text-transform: uppercase; color: var(--primary-color); margin-bottom: 15px; letter-spacing: 1px; font-weight: 700; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul li a:hover { color: var(--accent-color); }
+        .social-icons { display: flex; gap: 12px; margin-bottom: 15px; font-size: 18px; color: var(--primary-color); }
+        .contact-info p { margin-bottom: 8px; }
+        .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid #e8e2d5; font-size: 12px; color: #777; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content h1 { font-size: 44px; }
+            .commitment-box { grid-template-columns: repeat(2, 1fr); margin-top: -40px; }
+            .commit-item:nth-child(2) { border-right: none; }
+            .commit-item { padding: 15px 0; }
+            .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-menu { 
+                display: none; flex-direction: column; position: absolute; top: 100%; left: -20px; right: -20px;
+                background-color: var(--bg-light); padding: 20px; box-shadow: 0 5px 10px rgba(0,0,0,0.1); gap: 15px; z-index: 999;
+            }
+            .nav-menu.show { display: flex; }
+            .nav-menu a { padding: 10px 0; width: 100%; border-bottom: 1px solid #eee; }
+            .hero-grid, .product-showcase, .contact-grid { grid-template-columns: 1fr; text-align: center; }
+            .hero-content .subtitle { margin: 0 auto 30px; }
+            .hero-buttons { justify-content: center; }
+            .gallery-grid { grid-template-columns: repeat(4, 1fr); }
+            .top-bar { text-align: center; justify-content: center; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 { font-size: 32px; }
+            .commitment-box { grid-template-columns: 1fr; }
+            .commit-item { border-right: none !important; border-bottom: 1px dashed #e0e0e0; }
+            .commit-item:last-child { border-bottom: none; }
+            .footer-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="container">
+            <span>ANGILA - Mỹ phẩm thiên nhiên từ đất An Giang</span>
+            <div style="display: flex; align-items: center; gap: 25px;">
+                <span>Hotline: 0902199251</span>
+                <div style="display: flex; gap: 12px; font-size: 14px;">
+                    <a href="https://www.facebook.com/share/1ECcA6F1Jb/?mibextid=wwXIfr" target="_blank" title="Facebook" style="color: #fff;"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://www.tiktok.com/@angilabodycare?is_from_webapp=1&sender_device=pc" target="_blank" title="TikTok" style="color: #fff;"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="https://shopee.vn/shop/1860760127?uls_trackid=55vkiqlg00ov&utm_content=4YzW2wybbex6jB1o9tP5RaDbRHKD" target="_blank" title="Shopee" style="color: #fff;"><i class="fa-solid fa-bag-shopping"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="container nav-container">
+            <div class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></div>
+            
+            <!-- Thay bằng đoạn này -->
+<div class="logo">
+                <img src="../Anh/logo_brand.png" alt="Angila Logo">
+            </div>
+</div>
+            
+            <nav class="nav-menu" id="navMenu">
+                <a onclick="navigateTo('home')" class="nav-link active" data-target="home">Trang chủ</a>
+                <a onclick="navigateTo('story')" class="nav-link" data-target="story">Câu chuyện</a>
+                <a onclick="navigateTo('products')" class="nav-link" data-target="products">Sản phẩm</a>
+                <a onclick="navigateTo('blog')" class="nav-link" data-target="blog">Blog</a>
+                <a onclick="navigateTo('contact')" class="nav-link" data-target="contact">Liên hệ</a>
+            </nav>
+            
+            <div class="nav-icons">
+                <a href="https://www.facebook.com/share/1ECcA6F1Jb/?mibextid=wwXIfr" target="_blank" title="Facebook"><i class="fa-brands fa-facebook" style="color: #1877F2;"></i></a>
+                <a href="https://www.tiktok.com/@angilabodycare?is_from_webapp=1&sender_device=pc" target="_blank" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="https://shopee.vn/shop/1860760127?uls_trackid=55vkiqlg00ov&utm_content=4YzW2wybbex6jB1o9tP5RaDbRHKD" target="_blank" title="Shopee"><i class="fa-solid fa-bag-shopping" style="color: #EE4D2D;"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="page-section active">
+            <div class="hero">
+                <div class="container hero-grid">
+                    <div class="hero-content">
+                        <h1>ANGILA<br>Chăm sóc da từ <span>thiên nhiên</span></h1>
+                        <p class="subtitle">Thương hiệu tẩy da chết body được phát triển từ đường thốt nốt và yến mạch, hướng đến giải pháp làm đẹp an toàn, thân thiện với làn da Việt Nam.</p>
+                        <div class="hero-buttons">
+                            <a onclick="navigateTo('products')" class="btn btn-filled"><i class="fa-solid fa-bag-shopping"></i> Khám phá sản phẩm</a>
+                            <a onclick="navigateTo('story')" class="btn btn-outline">Câu chuyện của chúng tôi</a>
+                        </div>
+                    </div>
+                    <div class="hero-image-wrapper">
+                        <a href="https://shopee.vn/shop/1860760127?uls_trackid=55vkiqlg00ov&utm_content=4YzW2wybbex6jB1o9tP5RaDbRHKD" target="_blank">
+                            <img src="../Anh/a4.jpg" alt="#" class="hero-product-img">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="commitments">
+                <div class="container">
+                    <div class="commitment-box">
+                        <div class="commit-item">
+                            <div class="commit-icon"><i class="fa-solid fa-leaf"></i></div>
+                            <h3>Thiên nhiên lành tính</h3>
+                            <p>Nguồn nguyên liệu đặc trưng từ An Giang.</p>
+                        </div>
+                        <div class="commit-item">
+                            <div class="commit-icon"><i class="fa-solid fa-droplet"></i></div>
+                            <h3>Dưỡng ẩm mịn màng</h3>
+                            <p>Công thức dịu nhẹ, giữ ẩm cho da.</p>
+                        </div>
+                        <div class="commit-item">
+                            <div class="commit-icon"><i class="fa-solid fa-shield-heart"></i></div>
+                            <h3>An toàn tuyệt đối</h3>
+                            <p>Không chứa các chất gây kích ứng mạnh.</p>
+                        </div>
+                        <div class="commit-item">
+                            <div class="commit-icon"><i class="fa-solid fa-earth-asia"></i></div>
+                            <h3>Bản sắc Việt Nam</h3>
+                            <p>Nâng tầm giá trị nông sản địa phương.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nội dung bài báo cáo Trang Chủ -->
+            <div class="container text-content">
+                <h2>Lời Mở Đầu</h2>
+                <p>Mỹ phẩm thiên nhiên đang trở thành lựa chọn được nhiều người tiêu dùng quan tâm nhờ tính an toàn, lành tính và phù hợp với nhu cầu chăm sóc sức khỏe làn da. Sự phát triển của xu hướng làm đẹp từ các nguyên liệu tự nhiên đã mở ra cơ hội cho các thương hiệu khai thác giá trị của nguồn tinh tuý vùng đất An Giang, tạo nên những sản phẩm mang bản sắc riêng và có khả năng cạnh tranh trên thị trường.</p>
+                <p>Từ ý tưởng đó, nhóm xây dựng thương hiệu ANGILA - thương hiệu tẩy da chết body được phát triển từ đường thốt nốt và yến mạch. Sản phẩm lấy cảm hứng từ nguồn nguyên liệu đặc trưng của tỉnh An Giang, nơi cây thốt nốt từ lâu đã trở thành một phần trong đời sống văn hóa và kinh tế của địa phương. Thông qua việc ứng dụng nguyên liệu địa phương vào sản phẩm chăm sóc cơ thể, ANGILA hướng đến việc tạo ra những giải pháp làm đẹp an toàn, thân thiện với làn da và phù hợp với người tiêu dùng Việt Nam.</p>
+                <p>Báo cáo được thực hiện trong khuôn khổ học phần Thiết kế Nhận diện Thương hiệu, tập trung xây dựng hệ thống nhận diện hoàn chỉnh cho thương hiệu ANGILA. Nội dung báo cáo bao gồm quá trình nghiên cứu, định vị thương hiệu, thiết kế tên gọi, logo, slogan, nhạc hiệu, bao bì sản phẩm và đề xuất chiến lược truyền thông. Mỗi hạng mục đều được phát triển dựa trên định hướng thương hiệu thống nhất, nhằm thể hiện rõ giá trị cốt lõi và cá tính riêng của ANGILA.</p>
+                <p>Thông qua dự án này, nhóm mong muốn vận dụng những kiến thức đã học vào thực tiễn, đồng thời tìm hiểu sâu hơn về quy trình xây dựng một thương hiệu từ giai đoạn hình thành ý tưởng đến triển khai hệ thống nhận diện đồng bộ. Dự án cũng thể hiện mong muốn góp phần quảng bá giá trị của nguyên liệu bản địa Việt Nam thông qua các sản phẩm chăm sóc sắc đẹp mang tính ứng dụng cao.</p>
+                <p>Mặc dù đã nỗ lực nghiên cứu và hoàn thiện trong phạm vi kiến thức cũng như thời gian cho phép, báo cáo khó tránh khỏi những hạn chế nhất định. Nhóm rất mong nhận được những ý kiến đóng góp từ giảng viên để tiếp tục hoàn thiện và phát triển đề tài trong tương lai.</p>
+
+                <h2>1. Lý do chọn đề tài</h2>
+                <p>Với xu hướng về thị trường mỹ phẩm ngày một phát triển mạnh mẽ, nhu cầu chăm sóc da đã trở thành một phần thiết yếu trong thói quen hàng ngày của giới trẻ hiện nay. Trong các bước routine skincare body, bước tẩy da chết đang dần khẳng định vị thế quan trọng hơn nhờ khả năng tái tạo bề mặt và tối ưu hóa hiệu quả hấp thụ dưỡng chất cho làn da.</p>
+                <p>Theo khảo sát thực tế mà chúng tôi đã tìm hiểu, có tới 76% người dùng đã và đang đưa tẩy da chết vào quy trình làm đẹp của mình. Con số này không chỉ phản ánh một xu hướng tiêu dùng phổ biến mà còn cho thấy tiềm năng phát triển cực kỳ lớn cho dòng sản phẩm này trên thị trường.</p>
+                <p>Song song cùng nhu cầu làm đẹp là sự dịch chuyển mạnh mẽ sang lối sống bền vững. Gần 90% người tham gia khảo sát ưu tiên lựa chọn các sản phẩm có nguồn gốc từ thiên nhiên. Đây chính là mảnh đất màu mỡ để các thương hiệu khai thác những nguyên liệu từ bản địa, trong đó đường thốt nốt An Giang nổi lên như một ngôi sao tiềm năng. Không chỉ là đặc sản mang lại giá trị truyền thống, đường thốt nốt còn sở hữu những đặc tính dưỡng da tuyệt vời để phát triển thành dòng sản phẩm tẩy da chết thuần thiên nhiên, an toàn và lành tính.</p>
+                <p>Sức hấp dẫn của sản phẩm từ đường thốt nốt không thể không phủ nhận: có khoảng 55% người tiêu dùng bày tỏ sự hứng thú với sản phẩm tẩy da chết từ đường thốt nốt. Bên cạnh đó, mức giá kỳ vọng phổ biến nằm trong khoảng 110.000Đ - 150.000Đ cho thấy sản phẩm hoàn toàn có khả năng thâm nhập vào phân khúc tầm trung với khả năng tiếp cận khách hàng rộng rãi.</p>
+                <p>Tuy nhiên, rào cản lớn nhất vẫn là yếu tố tâm lý. Dù người dùng quan tâm về sản phẩm được làm từ thiên nhiên, nhưng vẫn còn khoảng 48% khách hàng lo ngại về tình trạng kích ứng và 28% chưa thực sự tin tưởng vào hiệu quả thực tế khi sản phẩm còn khá mới trên thị trường. Điều này phản ánh khoảng trống lớn trong khâu xây dựng thương hiệu và truyền thông minh bạch về sản phẩm.</p>
+                <p>Để biến tiềm năng thành doanh thu phải cần một chiến lược tiếp cận thị trường một cách bài bản nhất. Trong đó, Digital Marketing đóng vai trò như một chiếc chìa khóa để vượt qua những định kiến và xây dựng lòng tin nơi người tiêu dùng. Thông qua việc chia sẻ các đánh giá thực tế, kiểm định chất lượng và câu chuyện thương hiệu gắn liền với giá trị bản địa, doanh nghiệp có thể giải tỏa các lo ngại của khách hàng một cách hiệu quả nhất.</p>
+                <p>Đó chính là lý do mà chúng tôi chọn đề tài này để thực hiện. Dự án này không chỉ dừng lại ở việc phân tích nhu cầu thị trường mà còn tập trung xây dựng lộ trình tiếp cận khách hàng mục tiêu. Từ đó tạo nền tảng vững chắc để đưa sản phẩm thiên nhiên Việt Nam vươn xa hơn trong tương lai.</p>
+            </div>
+        </section>
+
+        <section id="story" class="page-section">
+            <div class="section-header">
+                <div class="container">
+                    <h1>Câu Chuyện Thương Hiệu</h1>
+                    <p>Giới thiệu doanh nghiệp và hành trình hình thành ANGILA</p>
+                </div>
+            </div>
+
+            <div class="container text-content">
+                <h2>I. Giới thiệu doanh nghiệp và thương hiệu ANGILA</h2>
+                
+                <h3>1. Tổng quan về doanh nghiệp</h3>
+                <h4>1.1. Tên doanh nghiệp</h4>
+                <p>ANGILA là thương hiệu mỹ phẩm thiên nhiên được xây dựng với định hướng khai thác các nguyên liệu bản địa Việt Nam để tạo ra những sản phẩm chăm sóc cơ thể an toàn, lành tính và phù hợp với nhu cầu của người tiêu dùng hiện đại. Thương hiệu được hình thành từ mong muốn đưa những giá trị đặc trưng của vùng đất An Giang vào các sản phẩm làm đẹp, góp phần tạo nên sự khác biệt trong ngành mỹ phẩm thiên nhiên tại Việt Nam.</p>
+                <p>Trong bối cảnh người tiêu dùng ngày càng quan tâm đến nguồn gốc nguyên liệu và độ an toàn của sản phẩm, ANGILA hướng đến việc xây dựng hình ảnh một thương hiệu gần gũi, đáng tin cậy và mang đậm dấu ấn bản địa.</p>
+
+                <h4>1.2. Lĩnh vực hoạt động</h4>
+                <p>ANGILA hoạt động trong lĩnh vực mỹ phẩm và chăm sóc cơ thể có nguồn gốc từ thiên nhiên. Thương hiệu tập trung nghiên cứu và phát triển các sản phẩm giúp chăm sóc làn da bằng những nguyên liệu thân thiện với người sử dụng, đồng thời đáp ứng xu hướng tiêu dùng xanh và bền vững đang ngày càng phát triển trên thị trường.</p>
+                <p>Không chỉ hướng đến hiệu quả sử dụng, ANGILA còn chú trọng khai thác những giá trị văn hóa và đặc sản địa phương nhằm tạo ra những sản phẩm mang bản sắc riêng, góp phần nâng cao giá trị của nguyên liệu Việt Nam trong ngành mỹ phẩm.</p>
+
+                <h4>1.3. Quy mô doanh nghiệp</h4>
+                <p>ANGILA được định hướng phát triển theo mô hình thương hiệu khởi nghiệp trong lĩnh vực mỹ phẩm thiên nhiên. Trong giai đoạn đầu, thương hiệu tập trung nguồn lực vào nghiên cứu sản phẩm, xây dựng hệ thống nhận diện thương hiệu và phát triển hình ảnh trên thị trường.</p>
+                <p>Với quy mô hoạt động tinh gọn, ANGILA có lợi thế trong việc linh hoạt nắm bắt xu hướng tiêu dùng, cải tiến sản phẩm và xây dựng mối quan hệ gần gũi với khách hàng. Đây cũng là nền tảng giúp thương hiệu từng bước khẳng định vị thế trong phân khúc mỹ phẩm thiên nhiên tại Việt Nam.</p>
+
+                <h3>2. Giới thiệu thương hiệu ANGILA</h3>
+                <h4>2.1 Ý nghĩa tên thương hiệu</h4>
+                <p>Tên ANGILA được hình thành từ sự kết hợp của hai yếu tố:</p>
+                <ul>
+                    <li><strong>ANGI</strong> viết tắt của An Giang, nổi tiếng với những hàng cây thốt nốt trải dài vùng Bảy Núi, nơi cung cấp nguồn nguyên liệu cốt lõi của thương hiệu.</li>
+                    <li><strong>LA</strong> mang ý nghĩa Lành tính - An toàn, thể hiện cam kết của thương hiệu về một sản phẩm dịu nhẹ, phù hợp với làn da người Việt.</li>
+                </ul>
+                <p>Tên gọi ngắn gọn, dễ đọc, dễ ghi nhớ. Chỉ ba âm tiết nhưng chứa đựng trọn vẹn bản sắc và triết lý của thương hiệu: vẻ đẹp bắt nguồn từ đất, an toàn đến từ thiên nhiên.</p>
+
+                <h4>2.2 Câu chuyện hình thành thương hiệu</h4>
+                <p>Vùng Bảy Núi, An Giang là nơi những hàng thốt nốt đứng thẳng tắp dưới cái nắng miền Tây từ lâu đã gắn liền với hình ảnh người dân Khmer cần cù trèo lên từng thân cây cao hàng chục mét, hứng từng giọt nước ngọt lành để cô đặc thành đường.</p>
+                <p>Đường thốt nốt không chỉ là đặc sản. Với người dân An Giang, nó là ký ức, là mưu sinh, là một phần văn hóa không thể tách rời.</p>
+                <p>Ít ai biết rằng, từ rất lâu trước khi các xu hướng chăm sóc da hiện đại trở nên phổ biến, những người phụ nữ vùng Bảy Núi đã có thói quen dùng đường thốt nốt còn ấm để chà nhẹ lên tay và chân sau những ngày lao động vất vả. Họ không gọi đó là “tẩy tế bào chết”, nhưng qua kinh nghiệm được truyền lại từ nhiều thế hệ, họ nhận thấy làn da trở nên mềm mại, mịn màng và ít thô ráp hơn. Đó là một bí quyết làm đẹp dân gian giản dị nhưng chứa đựng những giá trị đáng quý của vùng đất An Giang.</p>
+                <p>Trong quá trình thực hiện dự án nghiên cứu về thương hiệu mỹ phẩm bản địa, nhóm sáng lập ANGILA đã có cơ hội tiếp cận và lắng nghe câu chuyện này từ người dân địa phương. Từ đó, một câu hỏi được đặt ra: Nếu đường thốt nốt đã được sử dụng như một phương pháp chăm sóc da tự nhiên từ nhiều năm trước, tại sao giá trị ấy vẫn chưa được khai thác một cách bài bản trong ngành mỹ phẩm Việt Nam?</p>
+                <p>Với mong muốn tìm ra câu trả lời, nhóm bắt đầu nghiên cứu sâu hơn về thành phần của đường thốt nốt. Kết quả cho thấy loại nguyên liệu này chứa các axit trái cây tự nhiên (AHA), giúp hỗ trợ loại bỏ tế bào chết, cải thiện độ sáng và độ mịn của da. Bên cạnh đó, các khoáng chất như kali, canxi và magie còn góp phần duy trì độ ẩm tự nhiên, mang lại cảm giác mềm mại sau khi sử dụng.</p>
+                <p>Tuy nhiên, để tạo nên một công thức chăm sóc da hoàn chỉnh, đường thốt nốt cần được kết hợp với một thành phần có khả năng làm dịu và nuôi dưỡng làn da sau quá trình tẩy tế bào chết. Vì vậy, yến mạch đã được lựa chọn nhờ hàm lượng beta-glucan dồi dào, nổi tiếng với khả năng làm dịu da, cấp ẩm và hỗ trợ bảo vệ hàng rào tự nhiên của da.</p>
+                <p>Sự kết hợp giữa đường thốt nốt An Giang và yến mạch không đơn thuần là sự phối hợp giữa hai nguyên liệu thiên nhiên. Đó là sự giao thoa giữa tri thức dân gian và khoa học hiện đại, giữa giá trị truyền thống và nhu cầu làm đẹp của người tiêu dùng ngày nay. Với ANGILA, đây chính là cách để một nguyên liệu quen thuộc của quê hương được đánh thức tiềm năng, nâng tầm giá trị và trở thành nguồn cảm hứng cho một sản phẩm chăm sóc da mang đậm dấu ấn Việt Nam.</p>
+
+                <h4>2.3 Sứ mệnh thương hiệu</h4>
+                <p>Không chỉ là một sản phẩm làm đẹp, ANGILA ra đời không đơn thuần để lấp đầy một kệ hàng trên Shopee hay TikTok Shop. Thương hiệu được xây dựng từ một niềm tin cốt lõi: những gì tốt nhất cho làn da người Việt đang nằm ngay trên chính mảnh đất Việt Nam. Chỉ là chưa ai chịu nhìn ra và nâng tầm nó đúng cách.</p>
+                <p><strong>Ba trụ cột sứ mệnh:</strong></p>
+                <ul>
+                    <li><strong>Mang lại giải pháp chăm só6c da an toàn từ thiên nhiên bản địa:</strong> Trong bối cảnh người tiêu dùng ngày càng lo ngại về hóa chất trong mỹ phẩm, ANGILA cam kết xây dựng các sản phẩm từ nguyên liệu có nguồn gốc tự nhiên rõ ràng, lành tính với làn da... Không phải nguyên liệu nhập khẩu xa lạ mà là những gì đã gắn bó với đời sống bản địa từ lâu đời.</li>
+                    <li><strong>Nâng tầm giá trị nông sản địa phương thông qua ngành làm đẹp:</strong> Mỗi hũ tẩy da chết ANGILA bán ra là một lần đường thốt nốt An Giang được nhìn nhận không chỉ là thực phẩm mà còn là nguyên liệu có giá trị... giúp một nghề truyền thống lâu đời không bị mai một.</li>
+                    <li><strong>Lan tỏa văn hóa và bản sắc An Giang qua từng sản phẩm:</strong> An Giang còn có những hàng thốt nốt cao vút, những bếp lửa cô đường thâu đêm... ANGILA chọn kể câu chuyện đó qua từng thành phần, từng mùi hương, từng thiết kế bao bì để mỗi lần khách hàng mở nắp hũ tẩy da là một lần được chạm vào mảnh hồn của vùng đất miền Tây.</li>
+                </ul>
+                <p><em>ANGILA không chạy theo xu hướng nhất thời. Thương hiệu cam kết minh bạch về thành phần, không ngừng cải tiến, phát triển có trách nhiệm và đồng hành cùng khách hàng.</em></p>
+
+                <h4>2.4 Giá trị cốt lõi</h4>
+                <p>Giá trị cốt lõi của ANGILA được xây dựng dựa trên nguyên tắc khai thác nguồn nguyên liệu bản địa Việt Nam, cam kết lành tính, an toàn cho làn da và phát triển có trách nhiệm với cộng đồng địa phương.</p>
+                <ol>
+                    <li><strong>Nguyên liệu bản địa Việt Nam:</strong> Khai thác tối đa nguồn dưỡng chất phong phú từ các đặc sản thực vật quen thuộc... Đặc biệt là đường thốt nốt An Giang.</li>
+                    <li><strong>Thành phần an toàn:</strong> Ưu tiên sử dụng thành phần có nguồn gốc tự nhiên, hạn chế tối đa các chất bảo quản tổng hợp và thành phần dễ gây kích ứng.</li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="products" class="page-section">
+            <div class="section-header">
+                <div class="container">
+                    <h1>Sản Phẩm Của Chúng Tôi</h1>
+                    <p>Tinh tuý thiên nhiên từ vùng đất An Giang</p>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="product-showcase">
+                    <!-- Ảnh sản phẩm -->
+                    <div class="product-img-card">
+                        <img id="main-product-img" src="../Anh/1.png" alt="Tẩy Tế Bào Chết Đường Thốt Nốt & Yến Mạch">
+                        <div class="gallery-grid">
+                            <img src="../Anh/1.png" onclick="changeImage(this)" class="gallery-img active" alt="Ảnh 1">
+                            <img src="../Anh/2.png" onclick="changeImage(this)" class="gallery-img" alt="Ảnh 2">
+                            <img src="../Anh/3.png" onclick="changeImage(this)" class="gallery-img" alt="Ảnh 3">
+                            <img src="../Anh/4.png" onclick="changeImage(this)" class="gallery-img" alt="Ảnh 4">
+                        </div>
+                    </div>
+
+                    <!-- Thông tin sản phẩm -->
+                    <div class="product-details">
+                        <h2 style="font-family: var(--font-serif); font-size: 32px; color: var(--primary-color);">Tẩy Tế Bào Chết Body Đường Thốt Nốt & Yến Mạch</h2>
+                        <div class="price">149.000 VNĐ</div>
+                        
+                        <p style="color: #666; margin-bottom: 25px; text-align: justify; line-height: 1.8;">
+                            Sản phẩm lấy cảm hứng từ nguồn nguyên liệu đặc trưng của tỉnh An Giang. Sự kết hợp giữa đường thốt nốt và yến mạch giúp hỗ trợ làm sạch tế bào chết trên da một cách nhẹ nhàng, đồng thời mang lại cảm giác mềm mại và dễ chịu sau khi sử dụng.
+                        </p>
+                        
+                        <div style="margin-bottom: 30px;">
+                            <a href="https://shopee.vn/shop/1860760127?uls_trackid=55vkiqlg00ov&utm_content=4YzW2wybbex6jB1o9tP5RaDbRHKD" target="_blank" class="btn btn-filled" style="width: 100%; padding: 15px; font-size: 16px;">
+                                <i class="fa-solid fa-cart-shopping"></i> Mua Ngay Trên Shopee
+                            </a>
+                        </div>
+
+                        <div class="text-content" style="padding: 0; margin: 0;">
+                            <h3>Điểm nổi bật của sản phẩm</h3>
+                            <p>Đường thốt nốt An Giang được sử dụng như một thành phần tẩy tế bào chết vật lý giúp loại bỏ lớp da chết tích tụ trên bề mặt da một cách nhẹ nhàng, đồng thời chứa nhiều khoáng chất tự nhiên giúp hạn chế tình trạng khô căng sau khi sử dụng. Bên cạnh đó, yến mạch được biết đến với khả năng làm dịu, dưỡng ẩm và hỗ trợ phục hồi hàng rào bảo vệ da.</p>
+                            
+                            <h3>Giá trị mang lại cho khách hàng</h3>
+                            <p>Sản phẩm giúp làn da trở nên mềm mại, mịn màng và tươi sáng hơn, đồng thời hỗ trợ quá trình tái tạo da tự nhiên. Khi bề mặt da được làm sạch thông thoáng, các sản phẩm dưỡng thể sử dụng sau đó cũng có khả năng thẩm thấu tốt hơn. Sản phẩm mang lại cảm giác yên tâm nhờ thành phần có nguồn gốc thiên nhiên.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="blog" class="page-section">
+            <div class="section-header">
+                <div class="container">
+                    <h1>Blog & Phân Tích</h1>
+                    <p>Nghiên cứu thị trường và chân dung khách hàng</p>
+                </div>
+            </div>
+
+            <div class="container text-content">
+                <h2>Chia Sẻ Kinh Nghiệm Chăm Sóc Da</h2>
+                
+                <h3>🌿 Tại Sao Bạn Cần Tẩy Tế Bào Chết?</h3>
+                <p>Trên bề mặt da, lớp tế bào chết tích tụ hàng ngày. Điều này không chỉ làm da trở nên xỉn xịt, mà còn ảnh hưởng đến khả năng thẩm thấu của các sản phẩm dưỡng da khác. Tẩy tế bào chết định kỳ (1-2 lần/tuần) giúp:</p>
+                <ul>
+                    <li>Làm sáng da và cải thiện tone da tự nhiên</li>
+                    <li>Tăng khả năng hấp thu của các sản phẩm dưỡng ẩm và serum</li>
+                    <li>Giảm tình trạng mụn do bã nhờn và tế bào chết tích tụ</li>
+                    <li>Kích thích tái tạo tế bào da mới, làm da mềm mại hơn</li>
+                </ul>
+
+                <h3>💡 Lựa Chọn Sản Phẩm Tẩy Tế Bào Chết Phù Hợp</h3>
+                <p>Không phải tất cả các sản phẩm tẩy tế bào chết đều giống nhau. Có hai loại chính:</p>
+                <p><strong>• Tẩy Vật Lý (Physical Exfoliants):</strong> Sử dụng các hạt mịn hoặc thành phần tự nhiên để loại bỏ tế bào chết bằng cách cọ xát nhẹ nhàng. Phù hợp với da thường và da dầu.</p>
+                <p><strong>• Tẩy Hóa Học (Chemical Exfoliants):</strong> Sử dụng axit nhẹ (AHA, BHA) để hòa tan tế bào chết. Phù hợp với da nhạy cảm.</p>
+                <p><strong>Kinh nghiệm từ ANGILA:</strong> Sản phẩm Tẩy Tế Bào Chết Body Đường Thốt Nốt & Yến Mạch kết hợp cả hai phương pháp - hạt đường thốt nốt mịn cọ xát nhẹ, trong khi yến mạch dịu da. Đây là lựa chọn lý tưởng cho những ai muốn tẩy da chết nhẹ nhàng nhưng hiệu quả.</p>
+
+                <h3>🎯 Quy Trình Tẩy Tế Bào Chết Đúng Cách</h3>
+                <h4>Bước 1: Chuẩn Bị Da</h4>
+                <p>Tắm nước ấm để mở lỗ chân lông và làm mềm da. Đây là lúc tốt nhất để tẩy tế bào chết vì da đã mở và sạch sẽ.</p>
+                
+                <h4>Bước 2: Thoa Sản Phẩm</h4>
+                <p>Lấy một lượng sản phẩm phù hợp (khoảng 1-2 thìa) thoa lên da khô hoặc ửa ướt. Tập trung vào các vùng cần thiết như cưỡng, khuỷu tay, gót chân.</p>
+                
+                <h4>Bước 3: Massage Nhẹ</h4>
+                <p>Dùng ngón tay hoặc bàn tay massage từ từ trong 1-2 phút. Không nên cọ xát quá mạnh vì có thể làm tổn thương da. Hãy lắng nghe cơ thể - nếu da cảm thấy khó chịu, giảm lực tác động.</p>
+                
+                <h4>Bước 4: Rửa Sạch</h4>
+                <p>Rửa kỹ bằng nước ấm để loại bỏ toàn bộ sản phẩm. Một số dặm có thể để lại khi rửa chưa sạch.</p>
+                
+                <h4>Bước 5: Dưỡng Da</h4>
+                <p>Thoa ngay lotion, dầu dưỡng hoặc mặt nạ dưỡng ẩm khi da còn ửa ướt. Lúc này da thấm hút tốt nhất.</p>
+
+                <h3>💪 Những Lợi Ích Thực Tế Bạn Sẽ Cảm Nhận</h3>
+                <ul>
+                    <li><strong>Sau lần đầu:</strong> Da mềm mại, sạch sẽ, cảm giác thoải mái</li>
+                    <li><strong>Sau 2-3 tuần:</strong> Da sáng hơn, tone da đều hơn, giảm tình trạng khô và xỉn xịt</li>
+                    <li><strong>Sau 1-2 tháng:</strong> Da khỏe mạnh hơn, mụn giảm, các sản phẩm dưỡng khác hoạt động hiệu quả hơn</li>
+                </ul>
+
+                <h3>⚠️ Những Lưu Ý Quan Trọng</h3>
+                <ul>
+                    <li>Không tẩy tế bào chết quá thường xuyên (tối đa 2 lần/tuần)</li>
+                    <li>Tránh tẩy tế bào chết nếu da bị tổn thương, sưng tấy hoặc có vết mẹ mới</li>
+                    <li>Luôn dưỡng ẩm sau khi tẩy tế bào chết</li>
+                    <li>Nếu da nhạy cảm, hãy bắt đầu với 1 lần/tuần và quan sát phản ứng</li>
+                    <li>Thử trên một diện tích nhỏ trước khi sử dụng toàn thân</li>
+                </ul>
+
+                <p style="margin-top: 40px; padding: 20px; background: var(--bg-light); border-radius: 8px; border-left: 4px solid var(--accent-color);">
+                    <strong>💝 Mẹo từ ANGILA:</strong> Khi sử dụng sản phẩm Tẩy Tế Bào Chết Body Đường Thốt Nốt & Yến Mạch, hãy coi nó như một buổi spa tại nhà. Dành thời gian để massage và thưởng thức cảm giác chăm sóc bản thân. Đó là khi sản phẩm thực sự phát huy tác dụng tối đa!
+                </p>
+            </div>
+        </section>
+
+        <section id="contact" class="page-section">
+            <div class="section-header">
+                <div class="container">
+                    <h1>Liên Hệ</h1>
+                    <p>Kết nối với ANGILA</p>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="contact-grid">
+                    <!-- SĐT / Email -->
+                    <div class="contact-card">
+                        <div class="contact-icon"><i class="fa-solid fa-headset"></i></div>
+                        <h3 style="font-family: var(--font-serif); color: var(--primary-color); margin-bottom: 10px; font-size: 24px;">Hỗ Trợ Trực Tiếp</h3>
+                        <p style="color: #666; margin-bottom: 15px;">Chúng tôi luôn sẵn sàng lắng nghe bạn</p>
+                        <p style="font-size: 18px; font-weight: 600; color: var(--text-dark); margin-bottom: 5px;">
+                            <i class="fa-solid fa-phone" style="color: var(--accent-color); margin-right: 8px;"></i> 0902199251
+                        </p>
+                        <p style="font-size: 16px; color: var(--text-dark);">
+                            <i class="fa-solid fa-envelope" style="color: var(--accent-color); margin-right: 8px;"></i> angilabodycare@gmail.com
+                        </p>
+                    </div>
+
+                    <!-- Mạng Xã Hội / Shopee -->
+                    <div class="contact-card">
+                        <div class="contact-icon"><i class="fa-solid fa-store"></i></div>
+                        <h3 style="font-family: var(--font-serif); color: var(--primary-color); margin-bottom: 10px; font-size: 24px;">Kênh Bán Hàng</h3>
+                        <p style="color: #666; margin-bottom: 15px;">Theo dõi và mua sắm tiện lợi</p>
+                        <p style="font-size: 18px; font-weight: 600; color: var(--text-dark); margin-bottom: 10px;">
+                            <a href="https://www.facebook.com/share/1ECcA6F1Jb/?mibextid=wwXIfr" target="_blank" style="transition: color 0.3s;"><i class="fa-brands fa-facebook" style="color: #1877F2; margin-right: 8px;"></i> Fanpage: Angila Bodycare</a>
+                        </p>
+                        <p style="font-size: 18px; font-weight: 600; color: var(--text-dark); margin-bottom: 10px;">
+                            <a href="https://www.tiktok.com/@angilabodycare?is_from_webapp=1&sender_device=pc" target="_blank" style="transition: color 0.3s;"><i class="fa-brands fa-tiktok" style="color: #000; margin-right: 8px;"></i> TikTok: Angila Bodycare</a>
+                        </p>
+                        <p style="font-size: 18px; font-weight: 600; color: var(--text-dark);">
+                            <a href="https://shopee.vn/shop/1860760127?uls_trackid=55vkiqlg00ov&utm_content=4YzW2wybbex6jB1o9tP5RaDbRHKD" target="_blank" style="transition: color 0.3s;"><i class="fa-solid fa-bag-shopping" style="color: #EE4D2D; margin-right: 8px;"></i> Shopee: Angila Bodycare</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <div style="font-family: var(--font-serif); font-size: 24px; font-weight: 700; color: var(--primary-color); margin-bottom: 15px;">
+                    <i class="fa-brands fa-pagelines"></i> ANGILA
+                </div>
+                <p style="font-size:12px; color:#666; line-height: 1.8;">Thương hiệu mỹ phẩm thiên nhiên khai thác giá trị nguồn nguyên liệu bản địa Việt Nam. Vẻ đẹp bắt nguồn từ đất, an toàn đến từ thiên nhiên.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Khám phá</h4>
+                <ul>
+                    <li><a onclick="navigateTo('home')" style="cursor: pointer;">Trang chủ</a></li>
+                    <li><a onclick="navigateTo('story')" style="cursor: pointer;">Câu chuyện thương hiệu</a></li>
+                    <li><a onclick="navigateTo('products')" style="cursor: pointer;">Sản phẩm</a></li>
+                    <li><a onclick="navigateTo('blog')" style="cursor: pointer;">Blog nghiên cứu</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Liên hệ</h4>
+                <div class="contact-info">
+                    <p><i class="fa-solid fa-phone" style="width: 20px;"></i> 0902199251</p>
+                    <p><i class="fa-solid fa-envelope" style="width: 20px;"></i> angilabodycare@gmail.com</p>
+                    <p><i class="fa-brands fa-facebook" style="width: 20px;"></i> Angila Bodycare</p>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Mua hàng chính hãng</h4>
+                <p style="font-size:12px; margin-bottom:15px; color: #666; line-height: 1.6;">Ghé thăm gian hàng chính thức của ANGILA trên Shopee để nhận nhiều ưu đãi.</p>
+                <a href="https://shopee.vn/shop/1860760127?uls_trackid=55vkiqlg00ov&utm_content=4YzW2wybbex6jB1o9tP5RaDbRHKD" target="_blank" class="btn btn-dark" style="width: 100%; padding: 10px;">
+                    Đến Shopee Ngay
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 ANGILA Natural Skincare. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Xử lý Mobile Menu
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        menuToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('show');
+        });
+
+        // Đóng menu khi click vào thẻ a (trên mobile)
+        const navLinksMobile = navMenu.querySelectorAll('a');
+        navLinksMobile.forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('show');
+            });
+        });
+
+        // Xử lý Single Page Application (Chuyển trang)
+        function navigateTo(pageId) {
+            // Ẩn tất cả section
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(sec => sec.classList.remove('active'));
+
+            // Hiện section đích
+            const targetSection = document.getElementById(pageId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            // Cập nhật trạng thái active ở Navbar
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                if (link.getAttribute('data-target') === pageId) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+
+            // Cuộn lên đầu trang mượt mà
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Xử lý đổi ảnh Gallery Sản phẩm
+        function changeImage(element) {
+            // Đổi ảnh lớn
+            document.getElementById('main-product-img').src = element.src;
+            
+            // Xóa class active của tất cả thumb
+            const thumbs = document.querySelectorAll('.gallery-img');
+            thumbs.forEach(thumb => thumb.classList.remove('active'));
+            
+            // Thêm class active cho thumb được click
+            element.classList.add('active');
+        }
+    </script>
+</body>
+</html>
